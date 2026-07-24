@@ -38,7 +38,7 @@ export default function Header() {
     >
       <nav
         style={{
-          display: 'flex',
+          display: open ? 'none' : 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: scrolled ? '14px 32px' : '20px 32px',
@@ -47,7 +47,16 @@ export default function Header() {
           transition: 'padding .35s ease',
         }}
       >
-        <a href="#top" className="logo" style={{ fontFamily: 'var(--display)', fontWeight: 700, fontSize: 18 }}>
+        <a
+          href="#top"
+          className="logo"
+          style={{
+            fontFamily: 'var(--display)',
+            fontWeight: 700,
+            fontSize: 18,
+            display: open ? 'none' : 'block',
+          }}
+        >
           ARSLAN AHMAD<span style={{ color: 'var(--teal)' }}>.</span>
         </a>
 
@@ -85,7 +94,7 @@ export default function Header() {
         </div>
 
         <button
-          className="nav-toggle"
+          className={`nav-toggle${open ? ' hidden' : ''}`}
           aria-label="Toggle menu"
           onClick={() => setOpen((v) => !v)}
           style={{ display: 'none', background: 'none', border: 0, color: 'var(--white)' }}
@@ -97,24 +106,63 @@ export default function Header() {
       <AnimatePresence>
         {open && (
           <motion.div
-            className="nav-links-mobile"
+            className="mobile-menu-overlay"
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ duration: 0.4, ease: [0.2, 0.8, 0.2, 1] }}
             style={{
               position: 'fixed',
-              top: 64,
+              top: 0,
               left: 0,
-              right: 0,
-              bottom: 0,
-              background: 'var(--ink)',
+              width: '100vw',
+              height: '100vh',
+              zIndex: 1000,
+              background: 'rgba(11, 14, 19, 0.55)',
+              backdropFilter: 'blur(22px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(22px) saturate(180%)',
+              boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.08)',
               display: 'flex',
               flexDirection: 'column',
-              padding: '40px 32px',
-              gap: 28,
+              padding: '4px 18px 18px',
+              gap: 18,
+              overflow: 'hidden',
+              position: 'relative',
             }}
           >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingBottom: 10,
+                borderBottom: '1px solid rgba(255,255,255,0.08)',
+              }}
+            >
+              <div style={{ fontFamily: 'var(--display)', fontSize: 18, fontWeight: 700, color: '#ffffff', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                ARSLAN AHMAD
+                <span style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--teal)', display: 'inline-block' }} />
+              </div>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label="Close menu"
+                style={{
+                  width: 42,
+                  height: 42,
+                  borderRadius: 14,
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  background: 'rgba(255,255,255,0.06)',
+                  color: '#ffffff',
+                  display: 'grid',
+                  placeItems: 'center',
+                  cursor: 'pointer',
+                  padding: 0,
+                }}
+              >
+                <X size={20} />
+              </button>
+            </div>
             {navLinks.map((link, i) => (
               <motion.a
                 key={link.href}
@@ -123,18 +171,35 @@ export default function Header() {
                 initial={{ opacity: 0, x: 24 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.1 + i * 0.06 }}
-                style={{ fontSize: 20, color: 'var(--slate)' }}
+                style={{
+                  fontSize: 26,
+                  color: '#ffffff',
+                  fontWeight: 600,
+                  lineHeight: 1.2,
+                  letterSpacing: '-0.02em',
+                  marginBottom: 20,
+                  textDecoration: 'none',
+                }}
               >
                 {link.label}
               </motion.a>
             ))}
+            {/* Removed the extra close icon from the menu overlay to keep the menu cleaner on mobile */}
             <motion.a
               href="#contact"
               onClick={() => setOpen(false)}
               initial={{ opacity: 0, x: 24 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 + navLinks.length * 0.06 }}
-              style={{ fontSize: 20, color: 'var(--teal)' }}
+              style={{
+                fontSize: 26,
+                color: 'var(--teal)',
+                fontWeight: 700,
+                lineHeight: 1.2,
+                letterSpacing: '-0.02em',
+                marginTop: 20,
+                textDecoration: 'none',
+              }}
             >
               Get in touch
             </motion.a>
@@ -143,9 +208,21 @@ export default function Header() {
       </AnimatePresence>
 
       <style>{`
-        @media (max-width: 820px){
+        @media (max-width: 720px){
           .nav-links-desktop{ display:none !important; }
           .nav-toggle{ display:block !important; }
+        }
+        @media (min-width: 721px){
+          .mobile-menu-overlay{ display:none !important; }
+          .nav-links-desktop{ display:flex !important; }
+          .nav-toggle{ display:none !important; }
+        }
+        .nav-toggle.hidden{ display:none !important; }
+        @media (max-width: 520px){
+          .mobile-menu-overlay{ padding: 0 18px 18px !important; gap: 18px !important; }
+          .mobile-menu-overlay > div{ padding-top: 12px !important; }
+          .mobile-menu-overlay a{ font-size: 22px !important; margin-bottom: 16px !important; }
+          .nav-toggle{ margin-right: 0 !important; }
         }
       `}</style>
     </motion.header>

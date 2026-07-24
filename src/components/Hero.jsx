@@ -93,6 +93,13 @@ export default function Hero() {
         @media (max-width: 900px){
           .hero{ grid-template-columns: 1fr !important; padding-top: 140px !important; padding-bottom: 60px !important; }
         }
+        @media (max-width: 640px){
+          .hero{ gap: 32px !important; }
+          .hero h1{ font-size: clamp(28px, 7vw, 42px) !important; line-height: 1.12 !important; }
+          .hero p{ max-width: 100% !important; font-size: 15px !important; }
+          .btn-row{ flex-direction: column !important; align-items: stretch !important; }
+          .btn-row .btn{ width: 100% !important; justify-content: center !important; }
+        }
       `}</style>
     </section>
   );

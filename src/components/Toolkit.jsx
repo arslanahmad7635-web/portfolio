@@ -55,6 +55,10 @@ export default function Toolkit() {
         @media (max-width: 720px){
           .tool-grid{ grid-template-columns: repeat(2,1fr) !important; }
         }
+        @media (max-width: 520px){
+          .tool-grid{ grid-template-columns: 1fr !important; }
+          .tool-cell{ padding: 22px 18px !important; }
+        }
         .tool-cell:hover .tool-name{ color: var(--teal); }
       `}</style>
     </section>

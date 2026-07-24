@@ -69,6 +69,13 @@ export default function Contact() {
             </FooterIconLink>
           </div>
         </footer>
+        <style>{`
+          @media (max-width: 720px){
+            .btn-row{ flex-direction: column !important; gap: 14px !important; }
+            .btn-row .btn{ width: 100% !important; justify-content: center !important; }
+            footer{ flex-direction: column !important; align-items: center !important; }
+          }
+        `}</style>
       </div>
     </section>
   );

@@ -91,6 +91,9 @@ function ProjectRow({ project, index, isLast }) {
         @media (max-width: 840px){
           .project-row{ grid-template-columns: 1fr !important; gap: 22px !important; }
         }
+        @media (max-width: 620px){
+          .project-row{ gap: 18px !important; padding: 28px 0 !important; }
+        }
       `}</style>
     </Reveal>
   );

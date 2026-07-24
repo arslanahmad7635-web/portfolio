@@ -4,6 +4,7 @@ import churnMonthly from '../images/churn-monthly-trend.png';
 import churnRate from '../images/churn-rate-by-plan.png';
 import correlationMatrix from '../images/correlation-matrix.png';
 import netflixDashboard from '../images/netflix-dashboard.png';
+import { BorderBeam } from './lightswind/border-beam';
 
 const slides = [
   { id: 1, src: churnIntensity, caption: 'Churn intensity heatmap' },
@@ -15,6 +16,7 @@ const slides = [
 
 export default function ImageCarousel3D() {
   const [active, setActive] = useState(0);
+  const [centerHover, setCenterHover] = useState(false);
   const count = slides.length;
 
   const prevSlide = () => setActive((value) => (value - 1 + count) % count);
@@ -31,7 +33,7 @@ export default function ImageCarousel3D() {
           </p>
         </div>
 
-        <div className="carousel-shell">
+        <div className={`carousel-shell${centerHover ? ' center-hover' : ''}`}>
           <div className="carousel-scene">
             {slides.map((slide, index) => {
               let position = (index - active + count) % count;
@@ -46,15 +48,32 @@ export default function ImageCarousel3D() {
               return (
                 <div
                   key={slide.id}
-                  className="carousel-card"
+                  className={`carousel-card${position === 0 ? ' now' : ''}`}
                   style={{
-                    transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
+                    '--card-transform': `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
                     opacity,
                     zIndex: visible ? 20 - Math.abs(position) : 0,
                     pointerEvents: position === 0 ? 'auto' : 'none',
                   }}
+                  onMouseEnter={position === 0 ? () => setCenterHover(true) : undefined}
+                  onMouseLeave={position === 0 ? () => setCenterHover(false) : undefined}
                 >
-                  <img src={slide.src} alt={slide.caption} />
+                  <div className="relative h-full w-full overflow-hidden rounded-[inherit] image-hover-group">
+                    <img src={slide.src} alt={slide.caption} />
+                    <div className="border-beam-overlay pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-150 ease-out">
+                      <BorderBeam
+                        size={140}
+                        duration={6}
+                        beamBorderRadius={28}
+                        colorFrom="rgba(56, 189, 248, 1)"
+                        colorTo="rgba(236, 72, 153, 1)"
+                        opacity={1}
+                        glowIntensity={2}
+                        borderThickness={2}
+                        className="pointer-events-none absolute inset-0"
+                      />
+                    </div>
+                  </div>
                   <div className="carousel-caption">{slide.caption}</div>
                 </div>
               );
@@ -100,7 +119,15 @@ export default function ImageCarousel3D() {
           background: rgba(255,255,255,0.04);
           border: 1px solid var(--line);
           box-shadow: 0 40px 120px rgba(0,0,0,0.25);
-          transition: transform 0.65s ease, opacity 0.65s ease;
+          transition: transform 0.65s ease, opacity 0.65s ease, z-index 0.25s ease, filter 0.4s ease;
+          transform: var(--card-transform);
+          filter: none;
+        }
+
+        .carousel-card.now:hover {
+          transform: var(--card-transform) scale(1.35);
+          z-index: 100;
+          transition: transform 0.65s ease, opacity 0.65s ease, filter 0.4s ease;
         }
 
         .carousel-card img {
@@ -108,6 +135,27 @@ export default function ImageCarousel3D() {
           height: 100%;
           object-fit: cover;
           display: block;
+          transition: object-fit 0.25s ease, max-height 0.25s ease;
+        }
+
+        .carousel-card.now:hover img {
+          object-fit: contain;
+          max-height: unset;
+        }
+
+        .carousel-card.now:hover .border-beam-overlay {
+          opacity: 1;
+        }
+
+        .carousel-shell.center-hover .carousel-card:not(.now) {
+          filter: blur(5px) brightness(0.85);
+          opacity: 0.75;
+          transition: filter 0.25s ease, opacity 0.25s ease;
+        }
+
+        .carousel-card.now:hover {
+          filter: none;
+          opacity: 1;
         }
 
         .carousel-caption {
@@ -164,8 +212,14 @@ export default function ImageCarousel3D() {
 
         @media (max-width: 640px) {
           .carousel-shell { margin-top: 36px; }
-          .carousel-card { width: min(280px, 100%); height: 320px; }
+          .carousel-card { width: min(240px, 100%); height: 280px; }
           .carousel-controls { gap: 12px; }
+        }
+        @media (max-width: 520px) {
+          .carousel-shell { margin-top: 30px; }
+          .carousel-card { width: min(220px, 100%); height: 260px; }
+          .carousel-caption { font-size: 12px; padding: 14px 18px; }
+          .carousel-controls button { padding: 10px 14px; font-size: 12px; }
         }
       `}</style>
     </section>

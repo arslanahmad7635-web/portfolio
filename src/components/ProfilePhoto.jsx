@@ -25,6 +25,7 @@ export default function ProfilePhoto() {
 
   return (
     <motion.div
+      className="profile-photo-root"
       initial={{ opacity: 0, scale: 0.86, rotate: -3 }}
       animate={{ opacity: 1, scale: 1, rotate: 0 }}
       transition={{ duration: 0.9, delay: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
@@ -230,6 +231,18 @@ export default function ProfilePhoto() {
         }
         @media (prefers-reduced-motion: reduce){
           .profile-img{ transition:none !important; }
+        }
+        @media (max-width: 720px){
+          .profile-photo-root{ max-width: 280px !important; }
+          .profile-photo-root > div{ padding: 28px 20px 18px !important; }
+          .photo-frame{ inset: 8px !important; }
+          .profile-img{ object-position: center 40% !important; }
+        }
+        @media (max-width: 520px){
+          .profile-photo-root{ max-width: 240px !important; }
+          .profile-photo-root > div{ padding: 22px 18px 16px !important; }
+          .photo-frame{ inset: 6px !important; }
+          .tool-cell{ padding: 20px 16px !important; }
         }
       `}</style>
     </motion.div>
